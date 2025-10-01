@@ -10,7 +10,7 @@ The scenario is to have a PAM login user as a breakglass account managed by PAM 
 
 ![PAM User for Breakglass](/docs/images/PAMUser-Breakglass.png)
 
-Detailed setup and configuration in PAM is described in ![PAM User for Breakglass](/docs/PAMUser-Breakglass.md).
+Detailed setup and configuration in PAM is described in [PAM User for Breakglass](/docs/PAMUser-Breakglass.md).
 
  
 ## Manage PAM login user in different PAM domain
@@ -20,7 +20,7 @@ Ideally the login to PAM is done automatically without revealing it to the user.
 
 ![PAM User - Remote PAM](/docs/images/PAMUser-RemotePAM.png)
 
-Detailed setup and configuration in PAM is described in ![PAM User on remote PAM](/docs/PAMUser-RemotePAM.md).
+Detailed setup and configuration in PAM is described in [PAM User on remote PAM](/docs/PAMUser-RemotePAM.md).
 
 # Build PAMUser connector
 
@@ -56,7 +56,7 @@ ch.pam_exchange.pam_tc.pamuser.api.handlers= java.util.logging.ConsoleHandler
 
 # PAM setup and configuration
 
-Setup and configuration in PAM is described in ![PAM User for Breakglass](/docs/PAMUser-Breakglass.md) and ![PAM User on remote PAM](/docs/PAMUser-RemotePAM.md),
+Setup and configuration in PAM is described in [PAM User for Breakglass](/docs/PAMUser-Breakglass.md) and [PAM User on remote PAM](/docs/PAMUser-RemotePAM.md),
 
 
 # Version history
