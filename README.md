@@ -53,8 +53,7 @@ ch.pam_exchange.pam_tc.pamuser.api.handlers= java.util.logging.ConsoleHandler
 
 # PAM setup and configuration
 
-Setup and configuration is described in 
-
+Setup and configuration in PAM is described in ![PAM User for Breakglass](/docs/PAMUser-Breakglass.md) and ![PAM User on remote PAM](/docs/PAMUser-RemotePAM.md),
 
 
 # Version history
