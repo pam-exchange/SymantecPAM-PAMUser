@@ -16,7 +16,7 @@ The scenario is to have a PAM login user as a breakglass account managed by PAM 
 The scenario is to have two independent PAM environments. The environments are not a PAM cluster, but really two different PAM servers or clusters, which are not connected to each other. The idea is to have a PAM administrator in a second PAM domain (PAM-02) being managed by the first PAM domain (PAM-01), and also in reverse where a PAM administrator in the first PAM domain (PAM-01) is being managed by the the other PAM domain (PAM-02).<br>
 Ideally the login to PAM is done automatically without revealing it to the user. This scenario is not covered here.
 
-![PAM User - Remote PAM](/docs/images/PAMUser-RenitePAM.png)
+![PAM User - Remote PAM](/docs/images/PAMUser-RemotePAM.png)
 
 
 # Build PAMUser connector
@@ -53,7 +53,7 @@ ch.pam_exchange.pam_tc.pamuser.api.handlers= java.util.logging.ConsoleHandler
 
 # PAM setup and configuration
 
-
+Setup and configuration is described in 
 
 
 
