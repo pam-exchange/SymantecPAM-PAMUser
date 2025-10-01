@@ -1,0 +1,85 @@
+{
+	"application": {
+		"uiDefinition": {
+			"tabs": [{
+				"id": "PAMUserAppDetail1",
+				"label": "PAM User",
+				"fields": [{
+					"type": "NUMBER",
+					"field": "connectionTimeout",
+					"label": "Connection Timeout:",
+					"required": false,
+					"minValue": 1,
+					"value": 30000
+				},{
+					"type": "NUMBER",
+					"field": "readTimeout",
+					"label": "Read Timeout:",
+					"required": false,
+					"minValue": 1,
+					"value": 30000
+				},{
+					"type": "NUMBER",
+					"field": "port",
+					"label": "Port:",
+					"required": false,
+					"minValue": 0,
+					"maxValue": 65535,
+					"value": 443
+				}]
+			},
+			{
+				"id": "PAMUserAppDetail2",
+				"label": "PAM User (remote)",
+				"fields": [{
+						"type": "CHECKBOX",
+						"field": "isRemote",
+						"label": "PAM is remote",
+						"value": false
+					},
+					{
+						"type": "TEXT",
+						"field": "apikeyHostname",
+						"label": "ApiKey Device Name",
+						"required": false,
+						"maxLength": 120,
+						"value": "apikey.xceedium.com"
+					},
+					{
+						"type": "TEXT",
+						"field": "apikeyAppName",
+						"label": "ApiKey Application Name",
+						"required": false,
+						"maxLength": 120,
+						"value": "PAMUser - ApiKey"
+					}]
+			}]
+		}
+	},
+	"account": {
+		"uiDefinition": {
+			"tabs": [{
+				"id": "PAMUserAccDetail",
+				"label": "PAM User",
+				"fields": [{
+					"type": "RADIO",
+					"field": "accountType",
+					"label": "Target Account Type",
+					"value": "User",
+					"values": [{
+						"label": "PAM User",
+						"value": "User"
+					},{
+						"label": "ApiKey",
+						"value": "Apikey"
+					}]
+				},
+				{
+					"type": "TARGETACCOUNT",
+					"field": "otherAccount",
+					"label": "Master account"
+				}]
+			}]
+		}
+	}
+}
