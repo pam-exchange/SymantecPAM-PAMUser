@@ -4,20 +4,23 @@ This Symantec PAM connector is used to manage password for PAM login users. Thin
 
 The `PAM User` connector is covering two scenarios
 
-**Breakglass account for PAM login**
+## Breakglass account for PAM login
 
 The scenario is to have a PAM login user as a breakglass account managed by PAM itself. The user exist in PAM and the password for the login user is managed by PAM. If there is a process in place to extract and store password for breakglass accounts, the local store for breakglass accounts will have a breakglass account for PAM login access. The role of such a breakglass account is probably Global Administrator, but it can be anything necessary for emergency access to PAM.
 
 ![PAM User for Breakglass](/docs/images/PAMUser-Breakglass.png)
 
+Detailed setup and configuration in PAM is described in ![PAM User for Breakglass](/docs/PAMUser-Breakglass.md).
 
-**Manage PAM login user in different PAM domain**
+ 
+## Manage PAM login user in different PAM domain
 
 The scenario is to have two independent PAM environments. The environments are not a PAM cluster, but really two different PAM servers or clusters, which are not connected to each other. The idea is to have a PAM administrator in a second PAM domain (PAM-02) being managed by the first PAM domain (PAM-01), and also in reverse where a PAM administrator in the first PAM domain (PAM-01) is being managed by the the other PAM domain (PAM-02).<br>
 Ideally the login to PAM is done automatically without revealing it to the user. This scenario is not covered here.
 
 ![PAM User - Remote PAM](/docs/images/PAMUser-RemotePAM.png)
 
+Detailed setup and configuration in PAM is described in ![PAM User on remote PAM](/docs/PAMUser-RemotePAM.md).
 
 # Build PAMUser connector
 
