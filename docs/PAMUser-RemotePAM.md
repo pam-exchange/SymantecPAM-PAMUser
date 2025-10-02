@@ -14,18 +14,18 @@ In the example used here PAM-01 is seeing PAM-02 as an end-point where accounts 
 
 # PAM-02: PAM setup
 
-The PAM environment PAM-02 is where the local account (PAM user) exist. Seen from PAM-01 the environment PAM-02 is just another target environment where local accounts are defined and managed by PAM (PAM-01). 
+The PAM environment PAM-02 is where the local PAM user exist. Seen from PAM-01 the environment PAM-02 is just another target environment where local accounts are defined and managed by PAM (PAM-01). 
 
 ## PAM-02: Global Settings
 
-On PAM-02 where the PAM user is created, it is necessary to change the maximum password length for login users. This is done in the global settings. Update the Global Settings and change the password length to 72 characters (maximum length).
+An important update on PAM-02 is the password length for local PAM users. Default length is 16 characters, which probably is insufficient. Edit the PAM system Global Settings and change the password length to 72 characters (maximum length).
 
 ![Password Length for PAM Users](/docs/images/GlobalSettings.png)
 
 
 ## PAM-02: PAM User
 
-The users being managed by PAM is in the example a Global Administrator. It is possible to define other roles and permissions for the user. If so, the ApiKey associated with the PAM user must have permissions to list and search target accounts and target servers. It is possible to define a target group with a limited view of target accounts. This is not used in the example here.
+In the example used here, the local PAM user in PAM-02 is a Global Administrator. It is possible to define other roles and permissions for the managed user. If so, the ApiKey associated with the PAM user must have permissions to list and search target accounts and target servers. It is also possible to limit the scope of accounts for the ApiKey by using a target group. This is not used in the example shown here.
 
 ![PAM User - Basic Info](/docs/images/PAM-02-User-1.png)
 
@@ -44,9 +44,10 @@ Finally, for the user define an ApiKey. Initially when it is created the ID is z
 
 ## PAM-02: ApiKey
 
-The ApiKey created when the user is created is a standard ApiKey. In the example here, the length and age of the ApiKey is updated, such that it is automatically updated when it reaches a defined age.
-
 The ApiKey is used when the `PAM User` connector is requesting a password update for a PAM user.
+
+It is created as a standard ApiKey when the local PAM user is created. In the example here, the length the ApiKey is updated and the password age enforcement is turned off.
+
 
 ### PAM-02 - Password Composition Policy
 
@@ -103,7 +104,7 @@ Use defaults for the tab `PAM User`. Consider that the communication is from the
 
 In the tab `PAM User (remote)` verify that the checkbox `PAM is remote` is **checked**.
 
-![TargetApplication - PAM User](/docs/images/BG-TargetApplication-3.png)
+![TargetApplication - PAM User](/docs/images/PAM-01-TargetApplication-3.png)
 
 
 ### PAM-01: ApiKey - TargetAccount
@@ -136,9 +137,14 @@ That's about it. Saving the target account will update the password for the PAM 
 
 # Improvements and things to consider
 
-- In the example here only a single master account is used. It is possible to setup two ApiKey accounts for the PAM user in PAM-02 and to manage both of them in PAM-01. In the setup in PAM-01 the two accounts are master for each other. 
+- In the example here there is just one master account. It is possible to setup two ApiKey accounts for the local PAM user in PAM-02 and let PAM-01 manage both of them. In such a setup the two ApiKey accounts are master for each other. 
 
 - Create a TCP/UDP service in PAM-01, which will use the PAM user account managed to open a Web session to PAM-02 and perform automated login to PAM-02. This will allow a standard user in PAM-01 to become administrator in PAM-02 without knowing the password for the administrator in PAM-02.
+
+- Define target groups to limit scope of what an ApiKey can access.
+
+- Define permissions for ApiKey to minimum required to update passwords on local PAM users.
+
 
 # Error handling
 
