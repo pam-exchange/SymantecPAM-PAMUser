@@ -2,23 +2,22 @@
 
 When PAM user login accounts are managed by PAM it is natural to consider automated login to PAM using the managed account. In essense PAM is just another web application, and automated login to this is doable.
 
-In PAM the mechanism used for automated login to Web applications is called a `TCP/UDP service`. With the newer releases of PAM (4.2.3++) it is possible to use the built-in Web browser and to perform automated login to the PAM application. Using earlier releases of PAM the PAM Web GUI did not easily allow automated login.
+In PAM the mechanism used for automated login to Web applications is a `TCP/UDP service`. With the newer releases of PAM (4.2.3++) it is possible to use the built-in Symantec PAM Web browser and to perform automated login to the PAM application. Using earlier releases of PAM the mechanism to use the built-in Web browser did not work correctly.
 
 In the description here the PAM setup is covering two scenarios. Both scenarios are using two distinct and different PAM environments, where the PAM user is managed in one environment and used for automated login to the other PAM environment. 
 
-First setup is using a local PAM user existing in one PAM environment and managed by the other PAM environment. This is the setup using [Remote PAM](/docs/PAMUser-RemotePAM) for a local PAM user. 
+1) Using a local PAM user existing in one PAM environment and managed by the other PAM environment. This is the setup using [Remote PAM](/docs/PAMUser-RemotePAM) for a local PAM user. 
 
-Second setup is using Active Directory users for login to remote PAM environment (PAM-02) and managed as a target account in AD in first PAM environment (PAM-01). Both PAM environments must have access to the same Active Directory.
+2) Using Active Directory users for login to remote PAM environment (PAM-02) and managed as a target account in AD in first PAM environment (PAM-01). Both PAM environments must have access to the same Active Directory.
 
-For reasons described later, it is not possible to mix the two scenarios for automated login to PAM. Either the login users are local PAM users or the login users are Active Directory users, but they cannot be mixed.
+For reasons described later, it is not possible to mix the two scenarios for automated login to PAM. Users for automated login to PAM GUI must be either local PAM users or Active Directory users, but they cannot be mixed.
 
-# PAM setup - Common for Local and Active Directory PAM users
 
-Some setup in the originating PAM environment (PAM-01) are common for either of the two scenarios.
+# PAM setup - Common for both Local and Active Directory PAM users
 
-Subsequently to the common setup the PAM setup and configuration will depend on the scenario when a local PAM user or an Active Directory user is used for login to PAM. 
+There are some PAM configuration used regardless of the type of PAM login user. Subsequently to the common setup the PAM setup and configuration will depend on the scenario when a local PAM user or an Active Directory user is used for login to PAM. 
 
-In both scenarios the aim is to let a standard user gain access to PAM as global administrator without knowing the login password to the PAM GUI session.
+In both scenarios the aim is to let a standard user login to PAM without knowing the login password to the PAM GUI.
 
 ## TCP/UDP service for PAM
 
@@ -41,11 +40,8 @@ On the PAM-01 access page the new Web service is available. It has two entries f
 Select the `PAM (Learn)` to start the configuration steps.
 
 ![Learn - Username](/docs/images/Login-PAM-01-Learn-1.png)
-![Learn - Password](/docs/images/Login-PAM-01-Learn-2.png)
-![Learn - Submit](/docs/images/Login-PAM-01-Learn-3.png)
 
-In the top right corner select the disk icon to save the configuration.
-The Access page changes and the PAM service is now ready to be used.
+When the Accountname, Password and Submit Button fields are identified and marked, save the web page configuration (top right icon) and the PAM service is now ready to be used.
 
 ![PAM service configured](/docs/images/Login-PAM-01-Service-Configured.png)
 
@@ -58,7 +54,7 @@ On the calling PAM environment (PAM-01) create a new standard user `John Doe`. N
 
 ## PAM-02: Global setting (Local authentication)
 
-When learning PAM GUI login above, the username field, password field and submit button are identified. There is no ability to change the authentication type. Whatever the defaule setting is, this is what is used. Verify the default authentication type in global setting on remote PAM environment (PAM-02). When using a local PAM user for login, it must be set to `Local`.
+When learning PAM about the PAM GUI above, the username field, password field and submit button are identified. There is no ability to change the authentication type. Whatever the defaule setting is, this is what is used. Verify the default authentication type in global setting on remote PAM environment (PAM-02). If Active Directory users are used for automated PAM login, the default authentication type **must** be set to `Local`. If the PAM environment uses multiple AD domains, only users from the first domain in the list can be used for automated login.
 
 ![Authentication Type - Local](/docs/images/Login-PAM-02-GlobalSetting-Auth-Local.png)
 
@@ -89,14 +85,17 @@ A spinning pad lock is shown. Eventually, the PAM Dashboard is shown for PAM-02.
 
 When using PAM users from Active Directory the `PAM User` connector or any other connectors are **not** required for automated login to a remote PAM environment. It can be configured Out-Of-The-Bbox on the two PAM environments.
 
-**There is a catch.**  
-The control of who can login to PAM as a Global Administrator is done by AD group membership. The individuals controlling AD are now also controlling who can be global administrator in PAM. It can be the same team or it can be different teams. Additional controls for adding users to the dedicated AD groups is needed. Furthermore, if connection from PAM to AD is failing, login as a PAM user from AD is not possible. 
+> [!CAUTION]
+> Using an Active Directory account for automated login, control of who can login to PAM with high privileged (possible Global Administrator) is in the hands of the people controlling Active Directory.  
+> In PAM it is an AD group membership which will determine if a user can login to PAM and the role and privileges are assigned to the group and indirectly to the user.  
+> Furthermore, if connection from PAM to AD is failing, login as a PAM user from AD is not possible. 
+
 
 In the example here, the AD group `AdminLogins` is created in Active Directory. An AD user `superRemote` is member of the group. This is the user used for login to PAM as global administrator. 
 
 ## PAM-02: Global setting (LDAP authentication)
 
-When learning PAM GUI login above, the username field, password field and submit button are identified. There is no ability to change the authentication type. Whatever the defaule setting is, this is what is used. Verify the default authentication type in global setting on remote PAM environment (PAM-02). When using an Active Directory user for PAM login, it must be set to `LDAP`. If the PAM environment uses multiple AD domains, only users from the first domain in the list can be used for automated login.
+When learning PAM about the PAM GUI above, the username field, password field and submit button are identified. There is no ability to change the authentication type. Whatever the defaule setting is, this is what is used. Verify the default authentication type in global setting on remote PAM environment (PAM-02). If Active Directory users are used for automated PAM login, the default authentication type **must** be set to `LDAP`. If the PAM environment uses multiple AD domains, only users from the first domain in the list can be used for automated login.
 
 ![Authentication Type - LDAP](/docs/images/Login-PAM-02-GlobalSetting-Auth-AD.png)
 

@@ -1,8 +1,15 @@
 # Connector for PAM Users
 
-This Symantec PAM connector is used to manage password for PAM login users. Think of PAM as an end-point where the target account is a PAM login user. 
+The Symantec PAM connector here is used to manage password for PAM login users. Think of PAM as an end-point where the target account is a PAM login user. 
 
 The `PAM User` connector is covering two scenarios. In addition to managing a local PAM user using the `PAM User` connector, an example showing how to automate login to PAM without showing the password to the user. 
+
+Quick jump to detailed description
+
+- [PAM User for Breakglass](/docs/PAMUser-Breakglass.md
+- [PAM User on Remote PAM](/docs/PAMUser-RemotePAM.md)
+- [Automated login to PAM GUI](/docs/PAMUser-Login.md)
+
 
 ## Breakglass account for PAM login
 
