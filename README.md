@@ -2,7 +2,7 @@
 
 The Symantec PAM connector here is used to manage password for PAM login users. Think of PAM as an end-point where the target account is a PAM login user. 
 
-The `PAM User` connector is covering two scenarios. In addition to managing a local PAM user using the `PAM User` connector, an example showing how to automate login to PAM without showing the password to the user. 
+The `PAM User` connector is covering two scenarios. In addition to managing a local PAM user using the `PAM User` connector, there is also an example showing how to automate login to PAM using a local PAM user and an Active Directory user. 
 
 Quick jump to detailed description
 
@@ -13,21 +13,19 @@ Quick jump to detailed description
 
 ## Breakglass account for PAM login
 
-The scenario is to have a PAM login user as a breakglass account managed by PAM itself. The user exist in PAM and the password for the login user is managed by PAM. If there is a process in place to extract and store password for breakglass accounts, the local store for breakglass accounts will have a breakglass account for PAM login access. The role of such a breakglass account is probably Global Administrator, but it can be anything necessary for emergency access to PAM.
+This scenario is having a local PAM user as a breakglass account managed by PAM itself. The user exist in PAM and the password for the login user is managed by PAM. If there is a process in place to extract and store password for breakglass accounts, the local breakglass store accounts can also hold a local PAM user for PAM login access. The role of such a breakglass account is probably Global Administrator, but it can be anything necessary for emergency access to PAM.
 
 Detailed setup and configuration in PAM is described in [PAM User for Breakglass](/docs/PAMUser-Breakglass.md).
 
 ## Manage PAM login user in different PAM environment
 
-The scenario is to have two independent PAM environments. The environments are not a PAM cluster, but really two different PAM servers or clusters, which are not connected to each other. The idea is to have a PAM administrator in a second PAM environment (PAM-02) being managed by the first PAM environment (PAM-01), and also in reverse where a PAM administrator in the first PAM environment (PAM-01) is being managed by the the other PAM environment (PAM-02).
+This scenario is using two independent PAM environments. The environments are not setup in a PAM cluster, but are really two different PAM servers or two independent PAM clusters, which are not connected to each other. The idea is to have a PAM administrator in one PAM environment being managed by the other PAM environment. If login to PAM GUI is automated, it is possible to be a standard user in the one PAM environment and login to the other PAM environment as administrator without knowing the password for the login user.
 
 Detailed setup and configuration in PAM is described in [PAM User on remote PAM](/docs/PAMUser-RemotePAM.md).
 
 ## Automated login to PAM
 
-Furthermore, a setup and example is available using PAM to login to PAM. This is especially interesting when connecting from one PAM environment to a different PAM environment. A local PAM user managed in a PAM environment is used to login as administrator in a different PAM environment. 
-
-Note that automated login to a PAM instance can use a local PAM user (as shown here), but keep in mind that other target account types can also be used. This is described in the detailed documentation. 
+Finally, a description about setup of PAM for automated login to the PAM GUI is avaialble. It can be used with the scenario above using local PAM users. It is also shown how automated login to PAM GUI can be done using Active Directory users. 
 
 Detailed setup and configuration in PAM is described in [Automated login to PAM](/docs/PAMUser-Login.md).
 
@@ -66,7 +64,7 @@ ch.pam_exchange.pam_tc.pamuser.api.handlers= java.util.logging.ConsoleHandler
 
 # PAM setup and configuration
 
-Setup and configuration in PAM is described in [PAM User for Breakglass](/docs/PAMUser-Breakglass.md) and [PAM User on remote PAM](/docs/PAMUser-RemotePAM.md),
+See the detailed documentation for PAM setup and configuration.
 
 
 # Version history

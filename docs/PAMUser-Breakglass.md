@@ -1,17 +1,17 @@
 # PAM User for Breakglass
 
-The connector for `PAM User` can be used to manage password for a local PAM user. One scenario is to let PAM mange the login password for a PAM user and keep it in a secure place. This is a breakglass type scenario. The setup in the example here is to let PAM manage the login password for a local PAM user. 
+The connector for `PAM User` is used to for managing password for local PAM users. The scenario here is to create a local PAM user and let PAM itself rotate the password for the user. Assume that a breakglass process is available, the scenario is ideal to keep a local PAM user as a breakglass user. 
 
 ![PAM User for Breakglass](/docs/images/PAMUser-Breakglass.png)
 
-More details about breakglass scenarios and how it can be used is available in the repo [Breakglass](https://github.com/pam-exchange/Breakglass).
+Additional details about general breakglass scenarios and how to use it with Symantec PAM is found in the repo [Breakglass](https://github.com/pam-exchange/Breakglass).
 
-In PAM the password update for PAM users is using the API. Main reason is that with the API there is an option to change the password without the user being required to change the password at next login. When using the CLI such an option is not available and a user would be required to change the password at next login.
+Password update of a local PAM user is done using the API and not the avaialble CLI. When using the API for user password update, it is possible to set a flag to avoid a manadatory change of password at next login to the PAM GUI. When using the CLI such an option is not available and a user would be required to change the password at next login.
 
-When using the API it is required to define an ApiKey and associate it with the PAM user.
+Using the API with PAM uses an ApiKey which is associated with the (local) PAM user.
 
 > [!NOTE]
-> In the example here a new PAM user is created for a breakglass purpose. A similar configuration aned setup can be used for the local built-in administrator `super`. 
+> In the example here a new local PAM user is created for breakglass purpose. A similar configuration and setup can be used for the local built-in administrator `super`. 
 
 
 # PAM setup
@@ -23,10 +23,9 @@ An important update is the password length for local PAM users. Default length i
 ![Password Length for PAM Users](/docs/images/GlobalSettings.png)
 
 
-
 ## PAM User (Login)
 
-The local PAM user being managed by PAM in the example here is a Global Administrator. It is possible to define other roles and permissions for the managed user. If so, the ApiKey associated with the PAM user must have permissions to list and search target accounts and target servers. It is also possible to limit the scope of accounts for the ApiKey by using a target group. This is not used in the example shown here.
+The local PAM user being managed by PAM in the example here has the role `Global Administrator`. It is possible to define other roles and permissions for the managed user. If so, the ApiKey associated with the PAM user must have permissions to list and search target accounts and target servers. It is also possible to limit the scope of accounts for the ApiKey by using a target group. This is not used in the example shown here.
 
 ![PAM User - Basic Info](/docs/images/BG-User-1.png)
 
@@ -45,18 +44,17 @@ Finally, for the user define an ApiKey. Initially when it is created the ID is z
 
 ## ApiKey
 
-In the setup used when creating a new local PAM users a standard ApiKey is also created for this PAM user.  
-This ApiKey is used when the `PAM User` connector is requesting a password update for a local PAM user.
+In the setup used when creating a new local PAM users a dedicated standard ApiKey is also created for this PAM user.  This ApiKey is used when the `PAM User` connector is requesting a password update for a local PAM user.
 
 ### ApiKey - Password Composition Policy
 
-The PCP used for the of ApiKey used here is dynamic and will update when the age reaches 1 day. A different schedule can be used.
+The PCP used for the of ApiKey used here is dynamic and uses a password age enforcement of 1 day. A different schedule can be used.
 
 ![PCP - ApiKey Dynamic](/docs/images/PCP-ApiKey-dynamic.png)
 
 ### ApiKey - TargetApplication
 
-It is important to differentiate a standard ApiKey with the dynamic ApiKey used here. A new target application `ApiKey-dynamic` is created using the PCP with higher length for passwords and with an age limit enforcement.
+It is important to differentiate a (static) standard ApiKey with the dynamic ApiKey used here. A new target application `ApiKey-dynamic` is created using the PCP having higher length for passwords and with an age limit enforcement.
 
 ![TargetApplication - ApiKey Dynamic](/docs/images/BG-TargetApplication-ApiKey.png)
 
@@ -70,21 +68,21 @@ When updating the target account for the ApiKey verify that it is synchronizing 
 
 ## PAM User (Managed)
 
-The PAM user to be managed by PAM is a local PAM user. Create a target application and account using the same username as for the local PAM user. 
+The PAM user to be managed by PAM using the `PAM User` connector is a local PAM user. Create a target application and account with the same username as the new local PAM user. 
 
 ## PAM User - Password Composition Policy
 
-The length of passwords in this PCP must not be greater then the password length for PAM users defined in the Global Settings. Create a PCP used for new passwords generated by the `PAM User` connector. 
+The length of passwords in this PCP must not be greater then the maximum password length for local PAM users (Global Settings). Create a PCP used for new passwords generated by the `PAM User` connector. 
 
-If the target account is used for breakglass purposes, it is important that there is no automatic update of the password, thus there is no age enforcemwent defined in this PCP.
+If the target account for the local PAM user is used for breakglass purposes, it is important that there is no automatic update of the account password, thus the PCP used is without password age enforcemwent.
 
 ![PCP - PAM User Static](/docs/images/PCP-PAMUser-Passwords-static.png)
 
 ### PAM User - TargetApplication
 
-The PAM User is using a target account existing on a target server, which is the PAM system itself. If using a PAM cluster the target server used here is a member of the primary site.
+The PAM User is using a target account existing on a target server, which is the PAM system itself. If using a PAM cluster the target server used is a member of the primary site.
 
-Cerate the target application using the PCP witghout age enforcement just created for PAM Users.
+Cerate the target application using the PCP just created for accounts using `PAM User` connector.
 
 ![TargetApplication - PAM User](/docs/images/BG-TargetApplication-User-1.png)
 
@@ -110,7 +108,7 @@ In the tab `PAM User` Set the account type to `PAM User` and use the ApiKey defi
 
 ![TargetAccount - PAM User](/docs/images/BG-TargetAccount-User-2.png)
 
-That's about it. Saving the target account will update the password for the local PAM user to a new random value.
+That's about it. Saving the target account will use the ` PAM User` connector and update the password for the local PAM user to a new random value.
 
 
 # Improvements and things to consider
@@ -119,7 +117,7 @@ That's about it. Saving the target account will update the password for the loca
 
 - Define target groups to limit scope of what an ApiKey can access.
 
-- Define permissions for ApiKey to minimum required to update passwords on local PAM users.
+- Define permissions for the used ApiKey to a minimum required to update passwords on local PAM users.
 
 
 # Error handling

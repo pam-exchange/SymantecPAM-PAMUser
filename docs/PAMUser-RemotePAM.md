@@ -1,15 +1,15 @@
 # PAM User on Remote PAM
 
-Consider two isolated PAM environments. Each of these can be clustered, but the two environments are not part of the same PAM cluster. The aim here is to use a `PAM User` connector to manage PAM login user in one PAM environment from a different PAM environment. Ideally you would use automated login to PAM GUI using a password not visible to a user, but that is not in scope for this example.
+Consider two isolated PAM environments. Each of these can be clustered, but the two environments are not part of the same PAM cluster. The aim here is to use the `PAM User` connector for managing PAM login user in one PAM environment from a different PAM environment. Ideally you would use automated login to PAM GUI using a password not visible to a user. This is described elsewhere.
 
 ![PAM User for Breakglass](/docs/images/PAMUser-RemotePAM.png)
 
-In the example here there are many moving parts with two different PAM environments and users and target accounts created in one environment being linked to target accounts in the other PAM environment. To help with understanding, the two environments are named `PAM-01` and `PAM-02` and the configuration in PAM is also clearly marked to which of the two environments the configuration belongs. 
+In the example here there are many moving parts with two different PAM environments and users and target accounts created in one environment being linked to target accounts in the other PAM environment. In the description below, the two environments are named `PAM-01` and `PAM-02` and the configuration in PAM is clearly marked to which of the two environments the configuration belongs.
 
 - PAM-01 is the environment where accounts are managed from.
-- PAM-02 is the environment where accounts exist.
+- PAM-02 is the environment where the local PAM user exist.
 
-In the example used here PAM-01 is seeing PAM-02 as an end-point where accounts exist. The same approach can be used by reversing the roles of PAM-01 and PAM-02.
+In the example used here PAM-01 is seeing PAM-02 as an end-point using the `PAM User`connector for managing accounts (local PAM users). The same approach can be used the other way around letting PAM-02 manage a local PAM user in PAM-01. This is not described here.
 
 
 # PAM-02: PAM setup
@@ -25,7 +25,7 @@ An important update on PAM-02 is the password length for local PAM users. Defaul
 
 ## PAM-02: PAM User
 
-In the example used here, the local PAM user in PAM-02 is a Global Administrator. It is possible to define other roles and permissions for the managed user. If so, the ApiKey associated with the PAM user must have permissions to list and search target accounts and target servers. It is also possible to limit the scope of accounts for the ApiKey by using a target group. This is not used in the example shown here.
+In the example used here, the local PAM user in PAM-02 has the role `Global Administrator`. It is possible to define other roles and permissions for the managed user. If so, the ApiKey associated with the local PAM user must have permissions to list and search target accounts and target servers. It is also possible to limit the scope of accounts for the ApiKey by using a target group. This is not used in the example shown here.
 
 ![PAM User - Basic Info](/docs/images/PAM-02-User-1.png)
 
@@ -37,7 +37,7 @@ A `Global Administrator` must also have at least one Credential Manager Group as
 
 ![PAM User - Credential Manager Groups](/docs/images/PAM-02-User-3.png)
 
-Finally, for the user define an ApiKey. Initially when it is created the ID is zero (0). When the user is saved the ApiKey is created as a target account, and the ID will change to a different value
+Finally, define an ApiKey for the local PAM user. Initially when the ApiKey is created the ID is zero (0), and will be updated when the user is saved and the ApiKey is created.
 
 ![PAM User - ApiKey](/docs/images/PAM-02-User-4.png)
 
@@ -51,56 +51,50 @@ It is created as a standard ApiKey when the local PAM user is created. In the ex
 
 ### PAM-02 - Password Composition Policy
 
-The PCP used for the of ApiKey used here must be **static**, i.e. there is no automatic update of the ApiKey done by PAM-02 environment. Update to the ApiKey is done by PAM-01.
+The PCP used for the of ApiKey defined in PAM-02 will be used in PAM-01, and in PAM-02 this ApiKey must be **static**, i.e. there is no automatic password update of this ApiKey done by PAM-02 environment. Update to the ApiKey is done by PAM-01.
 
 ![PCP - ApiKey Static](/docs/images/PCP-ApiKey-static.png)
 
-> [!NOTE]
-> The composition rules for the PCP used for ApiKeys on PAM-02 must match the composition rules for PAM User on PAM-01. Reason is that random passwords generated must be acceptable passwords for the ApiKey and PAM user on PAM-02. Password age enforcement is a difference between the two PCP used in PAM-01 and PAM-02. In PAM-02 the PCP is static. In PAM-01 the PCP is dynamic. 
 
 ### PAM-02: ApiKey - TargetApplication
 
-It is important to differentiate a standard ApiKey with the dynamic ApiKey used here. A new target application `ApiKey-static` is created using the PCP with higher length and a age limit.
+It is important to differentiate a standard ApiKey, which may have dynamic password update, with the static ApiKey used here. Create a new target application `ApiKey-static` and use the PCP without password age enforcement. The password length must be sufficiently high.
 
 ![TargetApplication - ApiKey Static](/docs/images/PAM-02-TargetApplication-ApiKey.png)
 
 ### PAM-02: ApiKey - TargetAccount
 
-Finally, for the ApiKey the internal ID is added to the name used when the PAM user was created. Identify the correct target account and change the target application to `ApiKey-dynamic`.
+Finally, on PAM-02 locate the ApiKey created when the local PAM user was saved. 
+Change the password to a new random value using the length and composition policy for the PCP defined for ApiKey-static. View the password for the ApiKey and make note of both username and password. They will be used on PAM-01. 
 
 ![TargetAccount - ApiKey](/docs/images/PAM-02-TargetAccount-ApiKey.png)
-
-When updating the target account for the ApiKey verify that it is synchronizing with PAM and that a new random password is generated with the length defined in the PCP.
-
-The ApiKey account exist on PAM-02 and is managed by PAM-01. To setup the target account in PAM-01 it is necessary to view/copy the current password of the ApiKey and use it later when creating a target account in PAM-01.
 
 ![TargetAccount - ApiKey Password](/docs/images/PAM-02-TargetAccount-ApiKey-Password.png)
 
 
 # PAM-01: PAM setup
 
-This is the PAM environment from where the PAM user on PAM-02 is managed. Alas, for PAM-01 the PAM-02 environment is just a target system or end-point.
+PAM-01 is where local PAM user and ApiKey on PAM-02 are managed from. From PAM-01 the other PAM environment is just an end-point using the `PAM User` connector.
 
 ## PAM-01: Password Composition Policy
 
-When creating new random passwords for PAM users a new PCP is used. The PCP uses a password age enforcement to let PAM-01 change the password for the PAM user on PAM-02 frequently. 
+Passwords for the target accounts created on PAM-01 for the local PAM user and ApiKey existing on PAM-02 must be changed automatically by PAM-01. For this purpose a new PCP is created using password age enforcement. Both the local PAM user and ApiKey (on PAM-02) will use passwords generated with this PCP, thus the length of the password must not be greater than the local PAM user passwords on PAM-02 (Global Settings). 
 
 ![PCP - PAM User Dynamic](/docs/images/PCP-PAMUser-Passwords-dynamic.png)
 
 > [!NOTE]
-> The compositon of passwords from this PCP must be aligned with PCP used on PAM-02. Also note that this PCP is used for random passwords for both the ApiKey and PAM user on PAM-02. The PCP used on PAM-01 is dynamic and the PCP used on PAM-02 is static.
+> The compositon of passwords from this PCP must be aligned with PCP used on PAM-02 for ApiKeys and settings for local PAM user passwords. The PCP used on PAM-01 is dynamic and the PCP used on PAM-02 is static.
 
 
 ### PAM-01: TargetApplication
 
-The same target application is used for both the ApiKey and PAM user existing on PAM-02.
+The same target application on PAM-01 is used for target accounts is used for both the ApiKey and local PAM user existing on PAM-02.
 
 ![TargetApplication - PAM User](/docs/images/PAM-01-TargetApplication-1.png)
 
-Use defaults for the tab `PAM User`. Consider that the communication is from the TCF server attached to PAM-01 to PAM server in PAM-02.  
+Use defaults for the tab `PAM User`, but consider that the communication path from the TCF server attached to PAM-01 to a PAM server in PAM-02.  
 
 ![TargetApplication - PAM User](/docs/images/PAM-01-TargetApplication-2.png)
-
 
 In the tab `PAM User (remote)` verify that the checkbox `PAM is remote` is **checked**.
 
@@ -109,26 +103,26 @@ In the tab `PAM User (remote)` verify that the checkbox `PAM is remote` is **che
 
 ### PAM-01: ApiKey - TargetAccount
 
-The ApiKey used when PAM-01 sends API commands to PAM-02 exist on PAM-02. The connector `PAM user` is used with account type `ApiKey`. The password for the ApiKey (on PAM-02) is needed to setup the target account on PAM-01. The account name and account password is copied from the real ApiKey from PAM-02. 
+The ApiKey used when PAM-01 sends API commands to PAM-02 using an ApiKey existing on PAM-02. The connector `PAM user` uses the accounht type setting `ApiKey` in the tab `PAM User`. The account name is the ApiKey account name generated when the local PAM user was created on PAM-02. The initial password for the target account for the ApiKey (on PAM-01) in the `PAM User` account is the password for the real ApiKey from PAM-02. 
 
 ![TargetAccount - ApiKey](/docs/images/PAM-01-TargetAccount-ApiKey-1.png)
 
 In the tab `Password` change the synchronize setting to update both PAM and end-point.
 
-In the tab `PAM User` set the account type to **ApiKey**. There is no master account used in this example.
+In the tab `PAM User` set the account type to **ApiKey**. In thte example used here there is no master account, thus leave it blank.
 
 ![TargetAccount - ApiKey](/docs/images/PAM-01-TargetAccount-ApiKey-2.png)
 
 
 ### PAM-01: PAM User - TargetAccount
 
-Finally, create a target account using the account name matching the PAM User name. Create new random value for the password. 
+Finally, create a target account using the account name identical to the local PAM user. Create new random value for the password. 
 
 ![TargetAccount - PAM User](/docs/images/PAM-01-TargetAccount-User-1.png)
 
 In the tab `Password` change the synchronize setting to update both PAM and end-point.
 
-In the tab `PAM User` Set the account type to `PAM User` and use the target account for the ApiKey just created. Not that this is not a **real** ApiKey on PAM-01.
+In the tab `PAM User` Set the account type to `PAM User` and as master account use the target account for the ApiKey (on PAM-01). The master account is not a **real** ApiKey on PAM-01, but the target account of type `PAM User`.
 
 ![TargetAccount - PAM User](/docs/images/PAM-01-TargetAccount-User-2.png)
 
@@ -137,9 +131,7 @@ That's about it. Saving the target account will update the password for the PAM 
 
 # Improvements and things to consider
 
-- In the example here there is just one master account. It is possible to setup two ApiKey accounts for the local PAM user in PAM-02 and let PAM-01 manage both of them. In such a setup the two ApiKey accounts are master for each other. 
-
-- Create a TCP/UDP service in PAM-01, which will use the PAM user account managed to open a Web session to PAM-02 and perform automated login to PAM-02. This will allow a standard user in PAM-01 to become administrator in PAM-02 without knowing the password for the administrator in PAM-02.
+- In the example here there is just one master account. It is possible to setup two ApiKey accounts for the local PAM user in PAM-02 and let PAM-01 manage both of them. In such a setup the two target accounts will be master accounts for each other. 
 
 - Define target groups to limit scope of what an ApiKey can access.
 
@@ -148,5 +140,5 @@ That's about it. Saving the target account will update the password for the PAM 
 
 # Error handling
 
-If the API call to update the PAM user is failing, the API return code is visible in the `$CATALINA_HOME/logs/cataline.log` on the TCF server. 
+If the API call to update the local PAM user on PAM-02 is failing, the API return code is visible in the `$CATALINA_HOME/logs/cataline.log` on the TCF server (associated with PAM-01). 
 
