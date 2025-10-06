@@ -6,7 +6,7 @@ The `PAM User` connector is covering two scenarios. In addition to managing a lo
 
 Quick jump to detailed description
 
-- [PAM User for Breakglass](/docs/PAMUser-Breakglass.md
+- [PAM User for Breakglass](/docs/PAMUser-Breakglass.md)
 - [PAM User on Remote PAM](/docs/PAMUser-RemotePAM.md)
 - [Automated login to PAM GUI](/docs/PAMUser-Login.md)
 
