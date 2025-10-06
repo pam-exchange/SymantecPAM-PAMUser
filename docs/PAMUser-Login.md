@@ -2,7 +2,7 @@
 
 When PAM user login accounts are managed by PAM it is natural to consider automated login to PAM using the managed account. In essense PAM is just another web application, and automated login to this is doable.
 
-In PAM the mechanism used for automated login to Web applications is a `TCP/UDP service`. With the newer releases of PAM (4.2.3++) it is possible to use the built-in Symantec PAM Web browser and to perform automated login to the PAM application. Using earlier releases of PAM the mechanism to use the built-in Web browser did not work correctly.
+In PAM the mechanism used for automated login to Web applications is a `TCP/UDP service`. With the newer releases of PAM (4.2.3++) it is possible to use the built-in Symantec PAM browser and to perform automated login to the PAM application. Using earlier releases of PAM the mechanism to use the built-in Web browser did not work correctly.
 
 In the description here the PAM setup is covering two scenarios. Both scenarios are using two distinct and different PAM environments, where the PAM user is managed in one environment and used for automated login to the other PAM environment. 
 
@@ -54,7 +54,7 @@ On the calling PAM environment (PAM-01) create a new standard user `John Doe`. N
 
 ## PAM-02: Global setting (Local authentication)
 
-When learning PAM about the PAM GUI above, the username field, password field and submit button are identified. There is no ability to change the authentication type. Whatever the defaule setting is, this is what is used. Verify the default authentication type in global setting on remote PAM environment (PAM-02). If Active Directory users are used for automated PAM login, the default authentication type **must** be set to `Local`. If the PAM environment uses multiple AD domains, only users from the first domain in the list can be used for automated login.
+When learning PAM about the PAM GUI above, the username field, password field and submit button are identified. There is no ability to change the authentication type. Whatever the defaule setting is, this is what is used. Verify the default authentication type in global setting on remote PAM environment (PAM-02). If Active Directory users are used for automated PAM login, the default authentication type **must** be set to **Local**. If the PAM environment uses multiple AD domains, only users from the first domain in the list can be used for automated login.
 
 ![Authentication Type - Local](/docs/images/Login-PAM-02-GlobalSetting-Auth-Local.png)
 
@@ -87,15 +87,14 @@ When using PAM users from Active Directory the `PAM User` connector or any other
 
 > [!CAUTION]
 > Using an Active Directory account for automated login, control of who can login to PAM with high privileged (possible Global Administrator) is in the hands of the people controlling Active Directory.  
-> In PAM it is an AD group membership which will determine if a user can login to PAM and the role and privileges are assigned to the group and indirectly to the user.  
-> Furthermore, if connection from PAM to AD is failing, login as a PAM user from AD is not possible. 
+> Also, if connection from PAM to AD is failing, login as a PAM user from AD is not possible. 
 
 
 In the example here, the AD group `AdminLogins` is created in Active Directory. An AD user `superRemote` is member of the group. This is the user used for login to PAM as global administrator. 
 
 ## PAM-02: Global setting (LDAP authentication)
 
-When learning PAM about the PAM GUI above, the username field, password field and submit button are identified. There is no ability to change the authentication type. Whatever the defaule setting is, this is what is used. Verify the default authentication type in global setting on remote PAM environment (PAM-02). If Active Directory users are used for automated PAM login, the default authentication type **must** be set to `LDAP`. If the PAM environment uses multiple AD domains, only users from the first domain in the list can be used for automated login.
+When learning PAM about the PAM GUI above, the username field, password field and submit button are identified. There is no ability to change the authentication type. Whatever the defaule setting is, this is what is used. Verify the default authentication type in global setting on remote PAM environment (PAM-02). If Active Directory users are used for automated PAM login, the default authentication type **must** be set to **LDAP**. If the PAM environment uses multiple AD domains, only users from the first domain in the list can be used for automated login.
 
 ![Authentication Type - LDAP](/docs/images/Login-PAM-02-GlobalSetting-Auth-AD.png)
 
