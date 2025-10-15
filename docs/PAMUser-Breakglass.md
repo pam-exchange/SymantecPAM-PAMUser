@@ -1,17 +1,17 @@
 # PAM User for Breakglass
 
-The connector for `PAM User` is used to for managing password for local PAM users. The scenario here is to create a local PAM user and let PAM itself rotate the password for the user. Assume that a breakglass process is available, the scenario is ideal to keep a local PAM user as a breakglass user. 
+The connector for `PAM User` is used to for managing password for local PAM users. The scenario described here is to create a local PAM user and let PAM itself rotate the password for the user. One purpose can be to setup a breakglass user for PAM itself.  
 
 ![PAM User for Breakglass](/docs/images/PAMUser-Breakglass.png)
 
-Additional details about general breakglass scenarios and how to use it with Symantec PAM is found in the repo [Breakglass](https://github.com/pam-exchange/Breakglass).
+More details about general breakglass scenarios and how Symantec PAM can be used to store breakglass account passwords outside from PAM can be found in the repo [Breakglass](https://github.com/pam-exchange/Breakglass).
 
-Password update of a local PAM user is done using the API and not the avaialble CLI. When using the API for user password update, it is possible to set a flag to avoid a manadatory change of password at next login to the PAM GUI. When using the CLI such an option is not available and a user would be required to change the password at next login.
+Password update of a local PAM user is done using the API and not the CLI. When using the API for user password update, it is possible to set a flag to avoid a manadatory change of password at next login to the PAM GUI. When using the CLI such an option is not available and a user would be required to change the password at next login.
 
 Using the API with PAM uses an ApiKey which is associated with the (local) PAM user.
 
 > [!NOTE]
-> In the example here a new local PAM user is created for breakglass purpose. A similar configuration and setup can be used for the local built-in administrator `super`. 
+> In the example here a **new** local PAM user is created. A similar configuration and setup can be used for the local built-in administrator `super`. 
 
 
 # PAM setup
@@ -37,10 +37,9 @@ A `Global Administrator` must also have a Credential Managemnt Group associated.
 
 ![PAM User - Credential Manager Groups](/docs/images/BG-User-3.png)
 
-Finally, for the user define an ApiKey. Initially when it is created the ID is zero (0). When the user is saved the ApiKey is created as a target account and the ID will change to a different value
+Finally, for the user define an ApiKey. Initially when it is created the GUI shows the ID as zero (0). Saving the user will assign an internal ID to the ApiKey name.
 
 ![PAM User - ApiKey](/docs/images/BG-User-4.png)
-
 
 ## ApiKey
 
