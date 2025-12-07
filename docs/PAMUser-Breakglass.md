@@ -1,6 +1,7 @@
 # PAM User for Breakglass
 
-The connector for `PAM User` is used to for managing password for local PAM users. The scenario described here is to create a local PAM user and let PAM itself rotate the password for the user. One purpose can be to setup a breakglass user for PAM itself.  
+The connector for `PAM User` is used to for managing password for local PAM users.  
+The scenario described here is to create a local PAM user and let PAM itself rotate the password for the user. One purpose can be to setup a breakglass user for PAM itself.  
 
 ![PAM User for Breakglass](/docs/images/PAMUser-Breakglass.png)
 
@@ -20,7 +21,7 @@ Using the API with PAM uses an ApiKey which is associated with the (local) PAM u
 
 An important update is the password length for local PAM users. Default length is 16 characters, which probably is insufficient. Edit the PAM system Global Settings and change the password length to 72 characters (maximum length).
 
-![Password Length for PAM Users](/docs/images/GlobalSettings.png)
+![Password Length for PAM Users](/docs/images/GlobalSettings-User-Password-Length.png)
 
 
 ## PAM User (Login)
