@@ -43,7 +43,7 @@ The role assigned is `Global Administrator`.
 
 ![PAM User - Roles](/docs/images/BG-User-2.png)
 
-A `Global Administrator` must also belong to a Credential Management Group.
+A `Global Administrator` must also have a Credential Management Group assigned.
 
 ![PAM User - Credential Manager Groups](/docs/images/BG-User-3.png)
 
@@ -102,11 +102,11 @@ Create the target application using the PCP made for PAM User passwords.
 
 ![TargetApplication - PAM User](/docs/images/BG-TargetApplication-User-1.png)
 
-Use default settings on the **PAM User** tab.
+Use default settings on the '**PAM User**' tab.
 
 ![TargetApplication - PAM User](/docs/images/BG-TargetApplication-User-2.png)
 
-On the **PAM User (remote)** tab, ensure **PAM is remote** is **unchecked**.
+On the '**PAM User (remote)**' tab, ensure the setting '**PAM is remote**' is **unchecked**.
 
 ![TargetApplication - PAM User](/docs/images/BG-TargetApplication-User-3.png)
 
@@ -117,9 +117,9 @@ Generate a new random password.
 
 ![TargetAccount - PAM User](/docs/images/BG-TargetAccount-User-1.png)
 
-On the **Password** tab, enable synchronization for both PAM and the endpoint.
+On the '**Password**' tab, enable synchronization for both PAM and the endpoint.
 
-On the **PAM User** tab, set the account type to `PAM User` and select the ApiKey created for the user as the master account.
+On the '**PAM User**' tab, set the account type to `PAM User` and select the ApiKey created for the user as the master account.
 
 ![TargetAccount - PAM User](/docs/images/BG-TargetAccount-User-2.png)
 
