@@ -21,7 +21,7 @@ PAM-02 is where the local PAM user exists. From PAM-01’s perspective, PAM-02 i
 
 An important update on PAM-02 is the password length for local PAM users. The default length is 16 characters, which is likely insufficient. Edit the PAM System **Global Settings** and change the password length to **72 characters** (maximum length).
 
-![Password Length for PAM Users](/docs/images/GlobalSettings.png)
+![Password Length for PAM Users](/docs/images/GlobalSettings-User-Password-Length.png)
 
 ## PAM-02: PAM User
 

@@ -93,7 +93,7 @@ Create a policy for:
 - **User:** `john.doe`  
 - **Device:** `PAM-02`  
 
-In **Services**, add the `PAM` service and select `super-PAM-02` as the login (target) account.
+In **Services**, add the `PAM` service and select `super-PAM-02` as login account.
 
 ![Policy service](/docs/images/Login-PAM-01-Policy-1-Local.png)  
 ![Policy service - Login user](/docs/images/Login-PAM-01-Policy-2-Local.png)
@@ -183,7 +183,7 @@ Create a policy for:
 - **User:** `john.doe`  
 - **Device group:** `PAM-02-Group`  
 
-Add the `PAM` service and assign the target account `super-PAM-02` as login account.
+In **Services**, add the `PAM` service and select `superRemote` as login account.
 
 ![Policy service](/docs/images/Login-PAM-01-Policy-1-AD.png)  
 ![Policy service - Login user](/docs/images/Login-PAM-01-Policy-2-AD.png)
@@ -202,7 +202,8 @@ The PAM-02 Dashboard loads automatically with Global Administrator privileges.
 
 - The login user is a Global Administrator on PAM-02.  
 - Password of the login user is a target account managed in PAM-01 and cannot be retrieved.  
-- It is possible to setup a target application and account for the login user in AD and rotate the password. Password for the target account and login PAM user can now be retrieved.- Enable session recording for auditing.  
+- It is possible to setup a target application and account for the login user in AD on PAM-02 and rotate the password. Password for the target account and login PAM user can now be retrieved.
+- Enable session recording for auditing.  
 - AD administrators can reset passwords directly.  
 - AD administrators can add users to the `AdminLogins` group.  
-  Monitoring or blocking group membership changes is recommended.
+- Monitoring or blocking group membership changes is recommended.
