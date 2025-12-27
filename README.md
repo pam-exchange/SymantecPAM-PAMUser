@@ -2,7 +2,7 @@
 
 The Symantec PAM connector here is used to manage password for PAM login users. Think of PAM as an end-point where the target account is a PAM login user. 
 
-The `PAM User` connector is covering two scenarios. In addition to managing a local PAM user using the `PAM User` connector, there is also an example showing how to automate login to PAM using a local PAM user and an Active Directory user. 
+The `PAM User` connector is covering two scenarios. Scenario one is managing password for local PAM users on PAM itself. Scenario two is managing password for a PAM user on a different PAM installation. In addition to the two scenarios there is also a description and configuration about automated login to PAM GUI from PAM using a local PAM user and a PAM user found in Active Directory. 
 
 Quick jump to detailed description
 
@@ -19,13 +19,13 @@ Detailed setup and configuration in PAM is described in [PAM User for Breakglass
 
 ## Manage local PAM user in different PAM environment
 
-This scenario is using two independent PAM environments. The two environments are not part of the same PAM, but are really two different PAM servers or two independent PAM clusters, which are not connected to each other. The idea is to have a PAM administrator in one PAM environment being managed by the other PAM environment. If login to PAM GUI is automated, it is possible to be a standard user in the one PAM environment and login to the other PAM environment as administrator without knowing the password for the login user.
+This scenario is using two independent PAM environments. The two environments are not part of the same PAM cluster, but are really two different PAM servers or two independent PAM clusters, which are not connected to each other. The idea is having a PAM administrator in one PAM environment being managed from the other PAM environment. If login to PAM GUI is automated, it is possible to be a standard user in the one PAM environment and login as PAM administrator in the other PAM environment without knowing the login password.
 
 Detailed setup and configuration in PAM is described in [PAM User on Remote PAM](/docs/PAMUser-RemotePAM.md).
 
 ## Automated login to PAM
 
-Finally, a description about setup of PAM for automated login to the PAM GUI is avaialble. It can be used with managed local PAM users, and can also be used with Active Directory users. Regardless of the type of PAM user, automated login to PAM GUI is possible. 
+Finally, a description for configuring PAM with automated login to the PAM GUI is avaialble. The utomated login to PAM can be used with local users or with Active Directory.
 
 Detailed setup and configuration in PAM is described in [Automated login to PAM GUI](/docs/PAMUser-Login.md).
 
@@ -63,7 +63,7 @@ ch.pam_exchange.pam_tc.pamuser.api.handlers= java.util.logging.ConsoleHandler
 
 # PAM setup and configuration
 
-Detailed documentation for PAM setup and configuration is found in the links above..
+Detailed documentation for PAM setup and configuration is found in the links above.
 
 
 # Version history

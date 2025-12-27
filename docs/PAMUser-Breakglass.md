@@ -1,126 +1,142 @@
 # PAM User for Breakglass
 
-The connector for `PAM User` is used to for managing password for local PAM users.  
-The scenario described here is to create a local PAM user and let PAM itself rotate the password for the user. One purpose can be to setup a breakglass user for PAM itself.  
+The `PAM User` connector is used to manage passwords for local PAM users.  
+The example here describes how to create a local PAM user and let PAM rotate the password automatically.  
+A common use case is creating a breakglass user for the PAM system itself.
 
 ![PAM User for Breakglass](/docs/images/PAMUser-Breakglass.png)
 
-More details about general breakglass scenarios and how Symantec PAM can be used to store breakglass account passwords outside from PAM can be found in the repo [Breakglass](https://github.com/pam-exchange/Breakglass).
+More information about breakglass scenarios and how Symantec PAM can store breakglass passwords outside PAM is available in the repo **Breakglass**:  
+https://github.com/pam-exchange/Breakglass
 
-Password update of a local PAM user is done using the API and not the CLI. When using the API for user password update, it is possible to set a flag to avoid a manadatory change of password at next login to the PAM GUI. When using the CLI such an option is not available and a user would be required to change the password at next login.
+Password updates for local PAM users are done using the **API**, not the CLI.  
+Only the API allows disabling the “change password at next login” requirement.  
+The CLI always forces a password change on next login.
 
-Using the API with PAM uses an ApiKey which is associated with the (local) PAM user.
+Using the API requires an **ApiKey** linked to the local PAM user.
 
-> [!NOTE]
-> In the example here a **new** local PAM user is created. A similar configuration and setup can be used for the local built-in administrator `super`. 
+> [!NOTE]  
+> In this example a **new** local PAM user is created.  
+> The same approach can be used for the built-in administrator `super`.
 
+---
 
-# PAM setup
+# PAM Setup
 
 ## Global Settings
 
-An important update is the password length for local PAM users. Default length is 16 characters, which probably is insufficient. Edit the PAM system Global Settings and change the password length to 72 characters (maximum length).
+Increase the default password length for local PAM users.  
+The default is 16 characters, which is usually too short.  
+Update the global setting to the maximum value: **72 characters**.
 
 ![Password Length for PAM Users](/docs/images/GlobalSettings-User-Password-Length.png)
 
-
 ## PAM User (Login)
 
-The local PAM user being managed by PAM in the example here has the role `Global Administrator`. It is possible to define other roles and permissions for the managed user. If so, the ApiKey associated with the PAM user must have permissions to list and search target accounts and target servers. It is also possible to limit the scope of accounts for the ApiKey by using a target group. This is not used in the example shown here.
+The local PAM user managed in this example has the `Global Administrator` role.  
+Other roles can be used, but the user’s ApiKey must have permissions to list/search target accounts and servers.  
+Target groups may also be used to restrict the scope, though this example does not require them.
 
 ![PAM User - Basic Info](/docs/images/BG-User-1.png)
 
-The role for the PAM user in the example is a `Global Administrator`. 
+The role assigned is `Global Administrator`.
 
 ![PAM User - Roles](/docs/images/BG-User-2.png)
 
-A `Global Administrator` must also have a Credential Managemnt Group associated. 
+A `Global Administrator` must also have a Credential Management Group assigned.
 
 ![PAM User - Credential Manager Groups](/docs/images/BG-User-3.png)
 
-Finally, for the user define an ApiKey. Initially when it is created the GUI shows the ID as zero (0). Saving the user will assign an internal ID to the ApiKey name.
+Finally, create an ApiKey for the user.  
+When first created, the GUI shows the ID as **0**.  
+After saving, PAM assigns the real ApiKey ID.
 
 ![PAM User - ApiKey](/docs/images/BG-User-4.png)
 
 ## ApiKey
 
-In the setup used when creating a new local PAM users a dedicated standard ApiKey is also created for this PAM user.  This ApiKey is used when the `PAM User` connector is requesting a password update for a local PAM user.
+When creating a new local PAM user, this example also creates a dedicated **dynamic ApiKey**.  
+This ApiKey is used by the `PAM User` connector to update the user’s password.
 
-### ApiKey - Password Composition Policy
+### ApiKey – Password Composition Policy
 
-The PCP used for the of ApiKey used here is dynamic and uses a password age enforcement of 1 day. A different schedule can be used.
+The ApiKey uses a dynamic PCP with a password age limit of **1 day**.  
+You may choose a different schedule.
 
 ![PCP - ApiKey Dynamic](/docs/images/PCP-ApiKey-dynamic.png)
 
-### ApiKey - TargetApplication
+### ApiKey – Target Application
 
-It is important to differentiate a (static) standard ApiKey with the dynamic ApiKey used here. A new target application `ApiKey-dynamic` is created using the PCP having higher length for passwords and with an age limit enforcement.
+Create a new target application `ApiKey-dynamic` that uses the stronger PCP.
 
 ![TargetApplication - ApiKey Dynamic](/docs/images/BG-TargetApplication-ApiKey.png)
 
-### ApiKey - TargetAccount
+### ApiKey – Target Account
 
-Finally, for the ApiKey the internal ID is added to the name used when the local PAM user is created. Identify the correct target account (ApiKey) and change the target application to `ApiKey-dynamic`.
+Locate the target account created for the ApiKey.  
+Update the target application to `ApiKey-dynamic`.
 
 ![TargetAccount - ApiKey](/docs/images/BG-TargetAccount-ApiKey.png)
 
-When updating the target account for the ApiKey verify that it is synchronizing with PAM (tab `Passwords`) and create a new random password for the ApiKey.
+After updating, verify that PAM is synchronizing passwords and generate a new random password.
 
 ## PAM User (Managed)
 
-The PAM user to be managed by PAM using the `PAM User` connector is a local PAM user. Create a target application and account with the same username as the new local PAM user. 
+Create a target application and target account using the **same username** as the local PAM user.
 
-## PAM User - Password Composition Policy
+## PAM User – Password Composition Policy
 
-The length of passwords in this PCP must not be greater then the maximum password length for local PAM users (Global Settings). Create a PCP used for new passwords generated by the `PAM User` connector. 
+The PCP for PAM user passwords must not exceed the PAM global maximum.  
+Create a PCP to generate new passwords for the `PAM User` connector.
 
-If the target account for the local PAM user is used for breakglass purposes, it is important that there is no automatic update of the account password, thus the PCP used is without password age enforcemwent.
+For breakglass accounts, the PCP should **not** enforce automatic password aging.
 
 ![PCP - PAM User Static](/docs/images/PCP-PAMUser-Passwords-static.png)
 
-### PAM User - TargetApplication
+### PAM User – Target Application
 
-The PAM User is using a target account existing on a target server, which is the PAM system itself. If using a PAM cluster the target server used is a member of the primary site.
+The PAM User connector updates an account on a target server, which is the PAM appliance itself.  
+In a cluster, use a node from the **primary site**.
 
-Cerate the target application using the PCP just created for accounts using `PAM User` connector.
+Create the target application using the PCP made for PAM User passwords.
 
 ![TargetApplication - PAM User](/docs/images/BG-TargetApplication-User-1.png)
 
-Use defaults for the tab `PAM User`. The communication path from TCF where the connector is running back to PAM is expected to be very good. 
+Use default settings on the '**PAM User**' tab.
 
 ![TargetApplication - PAM User](/docs/images/BG-TargetApplication-User-2.png)
 
-
-In the tab `PAM User (remote)` verify that the checkbox `PAM is remote` is unchecked.
+On the '**PAM User (remote)**' tab, ensure the setting '**PAM is remote**' is **unchecked**.
 
 ![TargetApplication - PAM User](/docs/images/BG-TargetApplication-User-3.png)
 
+### PAM User – Target Account
 
-### PAM User - TargetAccount
-
-Finally, create a target account using the account name matching name of the local PAM user. Create a new random value for the password. 
+Create the target account with the same username as the local PAM user.  
+Generate a new random password.
 
 ![TargetAccount - PAM User](/docs/images/BG-TargetAccount-User-1.png)
 
-In the tab `Password` change the synchronize setting to update both PAM and end-point.
+On the '**Password**' tab, enable synchronization for both PAM and the endpoint.
 
-In the tab `PAM User` Set the account type to `PAM User` and use the ApiKey defined when the local PAM user was created as the master account.
+On the '**PAM User**' tab, set the account type to `PAM User` and select the ApiKey created for the user as the master account.
 
 ![TargetAccount - PAM User](/docs/images/BG-TargetAccount-User-2.png)
 
-That's about it. Saving the target account will use the ` PAM User` connector and update the password for the local PAM user to a new random value.
+After saving, the `PAM User` connector updates the local PAM user’s password.
 
+---
 
-# Improvements and things to consider
+# Improvements and Considerations
 
-- In the example here there is just one master account. It is possible to setup two ApiKey accounts for the local PAM user and let PAM manage both of them. In such a setup the two ApiKey accounts are master for each other. 
+- You may configure two ApiKey accounts for the local PAM user and let PAM rotate both.  
+  Each ApiKey becomes the master for the other.
+- Use target groups to limit ApiKey visibility.
+- Assign only the minimum required ApiKey permissions.
 
-- Define target groups to limit scope of what an ApiKey can access.
+---
 
-- Define permissions for the used ApiKey to a minimum required to update passwords on local PAM users.
+# Error Handling
 
-
-# Error handling
-
-If the API call to update the PAM user is failing, the API return code is visible in the `$CATALINA_HOME/logs/cataline.log` on the TCF server. 
-
+If the API call fails, check the return code in:  
+`$CATALINA_HOME/logs/catalina.log` on the TCF server.
