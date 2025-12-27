@@ -25,7 +25,7 @@ Detailed setup and configuration in PAM is described in [PAM User on Remote PAM]
 
 ## Automated login to PAM
 
-Finally, a description for configuring PAM with automated login to the PAM GUI is avaialble. The utomated login to PAM can be used with local users or with Active Directory.
+Finally, a description for configuring PAM with automated login to the PAM GUI is avaialble. The automated login to PAM can be used with local users or with Active Directory.
 
 Detailed setup and configuration in PAM is described in [Automated login to PAM GUI](/docs/PAMUser-Login.md).
 
